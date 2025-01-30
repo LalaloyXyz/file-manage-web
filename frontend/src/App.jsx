@@ -21,7 +21,12 @@ const App = () => {
 
   const onSuccess = (response) => {
     console.log('Login Success:', response);
-    const userData = response?.credential ? JSON.parse(atob(response.credential.split('.')[1])) : null;
+
+    // Decode the credential JWT manually
+    const userData = response?.credential
+      ? JSON.parse(atob(response.credential.split('.')[1]))
+      : null;
+
     if (userData) {
       const newUserInfo = {
         name: userData.name,
@@ -56,7 +61,13 @@ const App = () => {
           <div className="d-flex justify-content-center align-items-center min-vh-100">
             <div className="text-center">
               <h1 className="h2 mb-4">Welcome! Please log in</h1>
-              <GoogleLogin onSuccess={onSuccess} onError={onError} />
+              {/* Use popup login for better Safari compatibility */}
+              <GoogleLogin 
+                onSuccess={onSuccess} 
+                onError={onError} 
+                useOneTap 
+                auto_select={true} 
+              />
             </div>
           </div>
         ) : (
